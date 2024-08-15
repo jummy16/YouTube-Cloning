@@ -1,0 +1,1 @@
+export const url= import.meta.env.API_KEY
