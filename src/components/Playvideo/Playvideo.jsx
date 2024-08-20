@@ -13,6 +13,8 @@ import moment from 'moment'
 
 const Playvideo = ({videoId}) => {
     const [apiData, setApiData] = useState(null);
+    const [channelData, setChannelData] = useState(null)
+    const [commentData, setCommentData] = useState([])
     const fetchVideoData = async () => {
         // fetching video data
         const videoDetails_URL = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`
@@ -21,12 +23,31 @@ const Playvideo = ({videoId}) => {
         .then(data=>setApiData(data.items[0]))
 
     }
+    const fetchOtherData = async () => {
+        // fetching channel data
+        const channelData_URL = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${apiData.snippet.channelId}&key=${API_KEY}`
+        await fetch(channelData_URL)
+        .then(res=>res.json())
+        .then(data=>setChannelData(data.items[0]))
+
+        // fetching comment data
+        const comment_URL = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=50&videoId=${videoId}&key=${API_KEY}`
+        await fetch(comment_URL)
+        .then(res=>res.json())
+        .then(data=>setCommentData(data.items))
+    }
     useEffect(() => {
         fetchVideoData()
         .catch((err)=>{
             // console.log(err);
           });
     },[])
+    useEffect(() => {
+        fetchOtherData()
+        .catch((err)=>{
+            // console.log(err);
+          });
+    },[apiData])
   return (
     <div className='play-video'>
         {/* <video src={video1} controls autoplay muted loop></video> */}
@@ -36,17 +57,17 @@ const Playvideo = ({videoId}) => {
             <p>{apiData?value_converter(apiData.statistics.viewCount):'16k'} views <AiFillEye size={12}/> {apiData?moment(apiData.snippet.publishedAt).fromNow():''}</p>
             <div>
                 <span><img src={like} alt=''/>{apiData?value_converter(apiData.statistics.likeCount):'155'}</span>
-                <span><img src={dislike} alt=''/>6</span>
+                <span><img src={dislike} alt=''/></span>
                 <span><img src={share} alt=''/>Share</span>
                 <span><img src={save} alt=''/>Save</span>
             </div>
         </div>
         <hr/>
         <div className='publisher'>
-            <img className='jummy-img' src={jummy} alt=''/>
+            <img className='jummy-img' src={channelData?channelData.snippet.thumbnails.default.url:''} alt=''/>
             <div>
-                <p>StackOverFlow</p>
-                <span>1M Subscribers</span>
+                <p>{apiData?apiData.snippet.channelTitle:''}</p>
+                <span>{channelData?value_converter(channelData.statistics.subscriberCount):'1M'} Subscribers</span>
             </div>
             <button>Subscribe</button>
         </div>
@@ -54,78 +75,23 @@ const Playvideo = ({videoId}) => {
             <p>{apiData?apiData.snippet.description.slice(0,250):'Description Here'}</p>
             <hr/>
             <h4>{apiData?value_converter(apiData.statistics.commentCount):'100'} Comments</h4>
-            <div className='comment'>
-                <img src={user_profile} alt='' />
-                <div>
-                    <h3>Thomas Stone<span> 1 day ago</span></h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem, fuga?</p>
-                    <div className='comment-action'>
-                        <img src={like} alt=''/>
-                        <span>250</span>
-                        <img src={dislike} alt=''/>
+            {commentData.map((item,index)=>{
+                return(
+                    <div key={index} className='comment'>
+                    <img src={item.snippet.topLevelComment.snippet.authorProfileImageUrl} alt='' />
+                    <div>
+                        <h3>{item.snippet.topLevelComment.snippet.authorDisplayName}<span> 1 day ago</span></h3>
+                        <p>{item.snippet.topLevelComment.snippet.textDisplay}</p>
+                        <div className='comment-action'>
+                            <img src={like} alt=''/>
+                            <span>{value_converter(item.snippet.topLevelComment.snippet.likeCount)}</span>
+                            <img src={dislike} alt=''/>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className='comment'>
-                <img src={user_profile} alt='' />
-                <div>
-                    <h3>Thomas Stone<span> 1 day ago</span></h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem, fuga?</p>
-                    <div className='comment-action'>
-                        <img src={like} alt=''/>
-                        <span>250</span>
-                        <img src={dislike} alt=''/>
-                    </div>
-                </div>
-            </div>
-            <div className='comment'>
-                <img src={user_profile} alt='' />
-                <div>
-                    <h3>Thomas Stone<span> 1 day ago</span></h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem, fuga?</p>
-                    <div className='comment-action'>
-                        <img src={like} alt=''/>
-                        <span>250</span>
-                        <img src={dislike} alt=''/>
-                    </div>
-                </div>
-            </div>
-            <div className='comment'>
-                <img src={user_profile} alt='' />
-                <div>
-                    <h3>Thomas Stone<span> 1 day ago</span></h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem, fuga?</p>
-                    <div className='comment-action'>
-                        <img src={like} alt=''/>
-                        <span>250</span>
-                        <img src={dislike} alt=''/>
-                    </div>
-                </div>
-            </div>
-            <div className='comment'>
-                <img src={user_profile} alt='' />
-                <div>
-                    <h3>Thomas Stone<span> 1 day ago</span></h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem, fuga?</p>
-                    <div className='comment-action'>
-                        <img src={like} alt=''/>
-                        <span>250</span>
-                        <img src={dislike} alt=''/>
-                    </div>
-                </div>
-            </div>
-            <div className='comment'>
-                <img src={user_profile} alt='' />
-                <div>
-                    <h3>Thomas Stone<span> 1 day ago</span></h3>
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem, fuga?</p>
-                    <div className='comment-action'>
-                        <img src={like} alt=''/>
-                        <span>250</span>
-                        <img src={dislike} alt=''/>
-                    </div>
-                </div>
-            </div>
+                )
+            })}
+           
         </div>
     </div>
   )
