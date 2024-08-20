@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './feed.css'
 import thumbnail1 from '../../assets/thumbnail1.png'
 import thumbnail2 from '../../assets/thumbnail2.png'
@@ -10,107 +10,41 @@ import thumbnail7 from '../../assets/thumbnail7.png'
 import thumbnail8 from '../../assets/thumbnail8.png'
 import { AiFillEye } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
+import {API_KEY, value_converter} from '../../Data'
+import moment from 'moment'
 
 
-const Feed = () => {
+const Feed = ({category}) => {
+  const [data, setData] = useState([])
+
+  const fetchData = async () => {
+    const url= `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`
+    await fetch(url)
+    .then(response=>response.json())
+    .then(data=>setData(data.items))
+  }
+  
+  useEffect(() => {
+    fetchData()
+    .catch((err)=>{
+        // console.log(err);
+      });
+},[category])
+  
+
   return (
     <div className='feed'>
-       <Link to={`video/20/155`} className='card'>
-          <img src={thumbnail1} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
+      {data.map((item,index)=>{
+        return(
+          <Link to={`video/${item.snippet.categoryId}/${item.id}`} className='card'>
+            <img src={item.snippet.thumbnails.medium.url} alt=''/>
+            <h2> {item.snippet.title}</h2>
+            <h3>{item.snippet.channelTitle}</h3>
+            <p>{value_converter(item.statistics.viewCount)} views <AiFillEye size={12}/> {moment(item.snippet.publishedAt).fromNow()}</p>
         </Link>
-        <div className='card'>
-          <img src={thumbnail2} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail3} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail4} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail5} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail6} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail7} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail8} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail1} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail2} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail3} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail4} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail5} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail6} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail7} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views <AiFillEye size={12}/> 2 days ago</p>
-        </div>
-        <div className='card'>
-          <img src={thumbnail8} alt=''/>
-          <h2> How to install vite</h2>
-          <h3>StackOverflow</h3>
-          <p>15k views &bull; 2 days ago</p>
-        </div>
+        )
+      })}
+       
     </div>
    
   )
