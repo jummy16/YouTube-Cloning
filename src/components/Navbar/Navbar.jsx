@@ -22,11 +22,11 @@ const Navbar = ({setSidebar}) => {
           </div>
             
         </form>
-        <div className='header-icons nav-right flex-div'>
-            <img src={upload_icons} alt=''/>
-            <MdApps size={25}/>
-            <MdNotifications size={25}/>
-            <img src={picture} alt='my-picture'/>
+        <div className='header-icons flex-div'>
+            <img className='nav-right-img' src={upload_icons} alt=''/>
+            <MdApps className='header-icon' size={25}/>
+            <MdNotifications className='header-icon' size={25}/>
+            <img className='nav-right' src={picture} alt='my-picture'/>
         </div>
     </nav>
   )
