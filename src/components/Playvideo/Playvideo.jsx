@@ -52,7 +52,6 @@ const Playvideo = () => {
     },[apiData])
   return (
     <div className='play-video'>
-        {/* <video src={video1} controls autoplay muted loop></video> */}
         <iframe src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <h3>{apiData?apiData.snippet.title:'Title Here'}</h3>
         <div className='play-video-info'>

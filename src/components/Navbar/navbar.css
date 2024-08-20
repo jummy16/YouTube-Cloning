@@ -54,4 +54,7 @@ input{
         display: block;
         width: 30px;
     }
+    .nav-middle .search-box input{
+        width: 120px;
+    }
 }

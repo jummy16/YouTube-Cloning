@@ -54,24 +54,11 @@
     border-bottom: 3px solid red;
 }
 
-/* @media (max-width: 1224px) {
+@media (max-width: 1224px) {
     
     .sidebar{
-        width: 90vh;
+        display: none;
     }
-        .side-link{
-            justify-content: center;
-        }
-        span{
-            display: none;
-        }
+        
     
 }
-@media (max-width:520px) {
-    .sidebar{
-        transform: translateX(-100%);
-        position: fixed;
-        z-index: 999;
-    }
-    
-} */
