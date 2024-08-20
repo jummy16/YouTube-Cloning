@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './playvideo.css'
 import video1 from '../../assets/video.mp4'
 import like from '../../assets/like.png'
@@ -8,14 +8,32 @@ import save from '../../assets/save.png'
 import jummy from '../../assets/IMG_2817-1.jpeg'
 import user_profile from '../../assets/user_profile.jpg'
 import { AiFillEye } from 'react-icons/ai'
+import {API_KEY, value_converter} from '../../Data'
+import moment from 'moment'
 
-const Playvideo = () => {
+const Playvideo = ({videoId}) => {
+    const [apiData, setApiData] = useState(null);
+    const fetchVideoData = async () => {
+        // fetching video data
+        const videoDetails_URL = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`
+        await fetch(videoDetails_URL)
+        .then(res=>res.json())
+        .then(data=>setApiData(data.items[0]))
+
+    }
+    useEffect(() => {
+        fetchVideoData()
+        .catch((err)=>{
+            // console.log(err);
+          });
+    },[])
   return (
     <div className='play-video'>
-        <video src={video1} controls autoplay muted loop></video>
-        <h3>How to install React</h3>
+        {/* <video src={video1} controls autoplay muted loop></video> */}
+        <iframe src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <h3>{apiData?apiData.snippet.title:'Title Here'}</h3>
         <div className='play-video-info'>
-            <p>25 views <AiFillEye size={12}/> 2 days ago</p>
+            <p>{apiData?value_converter(apiData.statistics.viewCount):'16k'} views <AiFillEye size={12}/> {moment(apiData.snippet.publishedAt).fromNow()}</p>
             <div>
                 <span><img src={like} alt=''/>200</span>
                 <span><img src={dislike} alt=''/>6</span>
