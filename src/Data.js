@@ -1,5 +1,6 @@
-export const url= import.meta.env.API_KEY;
 export const API_KEY = 'AIzaSyCLYduoPEDDGaFast6jau4g8AWq6_pOdzU';
+// export const API_KEY = import.meta.env.API_KEY
+
 
 export const value_converter=(value)=>{
     if(value>=1000000){
@@ -11,3 +12,5 @@ export const value_converter=(value)=>{
         return value;
     }
 }
+
+

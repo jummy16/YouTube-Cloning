@@ -24,12 +24,12 @@ const Feed = ({category}) => {
     .then(data=>setData(data.items))
   }
   
-  useEffect(() => {
-    fetchData()
-    .catch((err)=>{
-        // console.log(err);
+    useEffect(() => {
+      fetchData().catch((err) => {
+        // console.error(err);
       });
-},[category])
+    }, [category]);
+
   
 
   return (
